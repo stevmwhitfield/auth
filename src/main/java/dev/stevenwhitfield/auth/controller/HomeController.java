@@ -1,11 +1,11 @@
 package dev.stevenwhitfield.auth.controller;
 
-import org.springframework.security.core.Authentication;
+import java.security.Principal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class Home {
+public class HomeController {
 
     @GetMapping("/")
     public String home() {
@@ -13,8 +13,8 @@ public class Home {
     }
 
     @GetMapping("/hello")
-    public String hello(Authentication auth) {
-        return "Hello " + auth.getName();
+    public String hello(Principal principal) {
+        return "Hello " + principal.getName();
     }
 
 }
