@@ -1,6 +1,6 @@
 # Auth
 
-This is a simple authentication API microservice that uses JWT-based authentication with asymmetric key encryption. It allows users to request a token and access protected routes.
+This is a simple authentication API that uses JWT-based authentication with asymmetric key encryption. It allows users to request a token and access protected routes.
 
 ## Table of Contents
 
