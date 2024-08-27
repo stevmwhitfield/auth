@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import dev.stevenwhitfield.auth.config.SecurityConfig;
+import dev.stevenwhitfield.auth.security.SecurityConfig;
 import dev.stevenwhitfield.auth.service.TokenService;
 
 @WebMvcTest({HomeController.class, AuthController.class})
