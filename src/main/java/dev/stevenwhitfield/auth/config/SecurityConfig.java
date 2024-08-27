@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,28 +38,32 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authManager(UserDetailsService userDetailsService) {
+        var authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        return new ProviderManager(authProvider);
+    }
+
+    @Bean
     public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(User.withUsername("user").password("{noop}password")
-                .authorities("READ", "ROLE_USER").build());
+        return new InMemoryUserDetailsManager(User.withUsername("user@email.com")
+                .password("{noop}password").authorities("READ", "ROLE_USER").build());
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
             auth.requestMatchers("/").permitAll();
-            auth.requestMatchers("/api/auth/signup").permitAll();
+            auth.requestMatchers("/token").permitAll();
             auth.anyRequest().authenticated();
         }).sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth -> oauth.jwt(withDefaults())).httpBasic(withDefaults())
-                .build();
+                .oauth2ResourceServer(oauth -> oauth.jwt(withDefaults())).build();
     }
 
     @Bean
     public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
-        LOG.debug("JWK: {}", jwk);
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        LOG.debug("JWKS: {}", jwks);
         return new NimbusJwtEncoder(jwks);
     }
 
