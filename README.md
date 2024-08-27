@@ -10,15 +10,8 @@ This is a simple authentication API that uses JWT-based authentication with asym
 
 ## Quick Start
 
-1. Create a `certs` directory under `auth-service/src/main/resources`.
-2. Generate a `private-key.pem` and `public-key.pem` in the `certs` directory.
-
-```bash
-openssl genrsa -out private-key.pem 2048
-
-openssl rsa -in private-key.pem -pubout -out public-key.pem
-```
-
+1. Download the project.
+2. Use maven to clean and build the project.
 3. Run the application.
 
 ## Endpoints
@@ -41,21 +34,33 @@ Returns:
 Hello <user-name>
 ```
 
-### POST /api/auth/token
+### POST /token
 
 Grants a token when provided with basic authentication credentials.
 
+Body:
+
+```json
+{
+  "email": "email@example.com",
+  "password": "secret"
+}
+```
+
 Returns:
 
-```
-<access-token>
+```json
+{
+  "accessToken": "jwt-token",
+  "tokenType": "Bearer",
+  "expiresIn": 3600
+}
 ```
 
 ## Future Improvements
 
 The following are some ideas for future improvements, in no particular order:
 
-- Use response entities with JSON instead of strings
 - Add support for email registration with confirmation
 - Add support for JWT refresh tokens
 - Add support for multiple user roles
